@@ -49,7 +49,7 @@ bot.callbackQuery("/about", async (ctx) => {
 });
 
 // bot.start();
-верни bot.start
+  bot.start();
 console.log('Бот запущен!');
 
 
