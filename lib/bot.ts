@@ -1,6 +1,7 @@
 import { Bot, InlineKeyboard } from "https://deno.land/x/grammy@v1.32.0/mod.ts";
 
-export const bot = new Bot(Deno.env.get("BOT_TOKEN") || "");
+// export const bot = new Bot(Deno.env.get("BOT_TOKEN") || "");
+export const bot = new Bot("7371466627:AAGop9AjkCPT5s9YQPk4_MsCfEfX_sLEjSc")
 
 const users = new Map();
 
