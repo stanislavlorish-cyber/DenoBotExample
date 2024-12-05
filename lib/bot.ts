@@ -1,4 +1,3 @@
-
 import { Bot, InlineKeyboard } from "https://deno.land/x/grammy@v1.32.0/mod.ts";
 
 export const bot = new Bot(Deno.env.get("BOT_TOKEN") || "");
@@ -50,4 +49,3 @@ bot.callbackQuery("/about", async (ctx) => {
 
 await bot.start(); // Обратите внимание на 'await'
 console.log('Бот запущен!');
-
