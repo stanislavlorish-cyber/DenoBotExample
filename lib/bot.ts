@@ -49,7 +49,9 @@ bot.callbackQuery("/about", async (ctx) => {
 });
 
 // bot.start();
+верни bot.start
 console.log('Бот запущен!');
+
 
 
 // >>>>>>> 73b691c000c5667a2876609550494257c1976086
