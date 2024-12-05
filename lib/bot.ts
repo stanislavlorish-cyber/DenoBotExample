@@ -1,11 +1,6 @@
 import { Bot, InlineKeyboard } from "https://deno.land/x/grammy@v1.32.0/mod.ts";
-export const bot = new Bot(Deno.env.get("BOT_TOKEN") || "");
 
-const botToken = Deno.env.get("BOT_TOKEN");
-if (!botToken) {
-    throw new Error("BOT_TOKEN is not defined!");
-}
-export const bot = new Bot(botToken);
+export const bot = new Bot(Deno.env.get("BOT_TOKEN") || "");
 
 const users = new Map();
 
@@ -52,5 +47,5 @@ bot.callbackQuery("/about", async (ctx) => {
     await ctx.reply("Я бот? Я бот... Я Бот!");
 });
 
-await bot.start();
+await bot.start(); // Обратите внимание на 'await'
 console.log('Бот запущен!');
