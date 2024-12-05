@@ -1,32 +1,55 @@
 import { Bot, InlineKeyboard } from "https://deno.land/x/grammy@v1.32.0/mod.ts";
 
-// Создайте экземпляр класса `Bot` и передайте ему токен вашего бота.
-// Токен и адрес бэкенда мы спрячем, чтобы никто не смог воспользоваться нашим ботом или взломать нас. Получим их из файла .env (или из настроек в Deno Deploy)
-export const bot = new Bot(Deno.env.get("BOT_TOKEN") || ""); // export нужен, чтобы воспользоваться ботом в другом файле
+export const bot = new Bot(Deno.env.get("BOT_TOKEN") || "");
 
-// Теперь вы можете зарегистрировать слушателей на объекте вашего бота `bot`.
-// grammY будет вызывать слушателей, когда пользователи будут отправлять сообщения вашему боту.
 
-// Обработайте команду /start.
-bot.command(
-    "start",
-    (ctx) => ctx.reply("Добро пожаловать. Запущен и работает!",{ reply_markup: keyboard }),
-);
+const users = new Map();
 
-// Обработайте другие сообщения.
-bot.on("message", (ctx) => ctx.reply("Получил ваше сообщение: " + ctx.message.text + " !",));
-
-// Клавиатура будет отправлять в бота команду /about
+// Клавиатура для команды /about
 const keyboard = new InlineKeyboard()
     .text("Обо мне", "/about");
 
-bot.callbackQuery("/about", async (ctx) => {
-    await ctx.answerCallbackQuery(); // Уведомляем Telegram, что мы обработали запрос
-    await ctx.reply("Я бот? Я бот... Я Бот!");
+bot.command("start", (ctx) => {
+    ctx.reply("Добро пожаловать. Запущен и работает!", { reply_markup: keyboard });
+    ctx.reply("Пожалуйста, напишите свои интересы и город.");
 });
 
-// Запуск бота
-bot.start();
-console.log('Бот запущен!');
 
+bot.on("message", async (ctx) => {
+    const userId = ctx.from.id;
+
+
+    let userData = users.get(userId);
+    if (!userData) {
+        userData = { interests: '', city: '' };
+        users.set(userId, userData);
+    }
+
+  
+    if (!userData.interests) {
+        userData.interests = ctx.message.text;
+        await ctx.reply(Вы написали интересы: ${userData.interests}. Теперь напишите свой город.);
+    } else if (!userData.city) {
+        userData.city = ctx.message.text;
+        await ctx.reply(Вы из города: ${userData.city}.);
+
+     
+        const matches = Array.from(users.entries())
+            .filter(([id, data]) => id !== userId && data.city === userData.city && data.interests === userData.interests);
+
+        if (matches.length > 0) {
+            const matchedUsernames = matches.map(([id]) => Пользователь ${id}).join(', ');
+            await ctx.reply(У вас есть совпадения с: ${matchedUsernames}. Хотите встретиться?);
+        } else {
+            await ctx.reply("Совпадений не найдено.");
+        }
+    }
+});
+
+// Обработайте команду /about
+bot.callbackQuery("/about", async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await ctx.reply("Я бот? Я бот... Я Бот!");
+});             bot.start();
+console.log('Бот запущен!');
 
