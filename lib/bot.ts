@@ -28,18 +28,18 @@ bot.on("message", async (ctx) => {
   
     if (!userData.interests) {
         userData.interests = ctx.message.text;
-        await ctx.reply(Вы написали интересы: ${userData.interests}. Теперь напишите свой город.);
+        await ctx.reply(`Вы написали интересы: ${userData.interests}. Теперь напишите свой город.`);
     } else if (!userData.city) {
         userData.city = ctx.message.text;
-        await ctx.reply(Вы из города: ${userData.city}.);
+        await ctx.reply(`Вы из города: ${userData.city}.`);
 
      
         const matches = Array.from(users.entries())
             .filter(([id, data]) => id !== userId && data.city === userData.city && data.interests === userData.interests);
 
         if (matches.length > 0) {
-            const matchedUsernames = matches.map(([id]) => Пользователь ${id}).join(', ');
-            await ctx.reply(У вас есть совпадения с: ${matchedUsernames}. Хотите встретиться?);
+            const matchedUsernames = matches.map(([id]) => `Пользователь ${id}`).join(', ');
+            await ctx.reply(`У вас есть совпадения с: ${matchedUsernames}. Хотите встретиться?`);
         } else {
             await ctx.reply("Совпадений не найдено.");
         }
@@ -50,6 +50,7 @@ bot.on("message", async (ctx) => {
 bot.callbackQuery("/about", async (ctx) => {
     await ctx.answerCallbackQuery();
     await ctx.reply("Я бот? Я бот... Я Бот!");
-});             bot.start();
+});
+// bot.start();
 console.log('Бот запущен!');
 
