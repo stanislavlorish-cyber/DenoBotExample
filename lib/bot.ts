@@ -1,19 +1,16 @@
-
-import { Bot, InlineKeyboard } from "https://deno.land/x/grammy@v1.32.0/mod.ts";
 import { serve } from "https://deno.land/std/http/server.ts";
 
 const bot = new Bot(Deno.env.get("BOT_TOKEN") || "");
-const port = Deno.env.get("PORT") || 8080; // Вы можете установить порт в переменных окружения
+const port = Number(Deno.env.get("PORT") || 8080); // Установка порта с значением по умолчанию
 
 // Хранилище пользователей и их интересов
 const users = new Map();
 
 // Клавиатура для команды /about
-const keyboard = new InlineKeyboard()
-    .text("Обо мне", "/about");
+const keyboard = new InlineKeyboard().text("Обо мне", "/about");
 
 // Установка Webhook
-await bot.api.setWebhook(`https://https://stanislavlo-denobotexam-32-jmf3xkxg3kqn.deno.dev/:${port}/webhook`); // Замените YOUR_DOMAIN на ваш домен
+await bot.api.setWebhook(`https://stanislavlo-denobotexam-32-jmf3xkxg3kqn.deno.dev:${port}/webhook`); // Замените YOUR_DOMAIN на ваш домен
 
 // Обработайте команду /start.
 bot.command("start", (ctx) => {
@@ -53,24 +50,7 @@ bot.on("message", async (ctx) => {
     }
 });
 
-// Обработайте команду /about
-bot.callbackQuery("/about", async (ctx) => {
-    await ctx.answerCallbackQuery();
-    await ctx.reply("Я бот? Я бот... Я Бот!");
-});
-
-// Запуск Webhook сервера
-serve(async (req) => {
-    // Обрабатываем запросы от Telegram
-    if (req.method === "POST") {
-        const body = await req.json();
-        await bot.handleUpdate(body);
-        return new Respo
-
-
-
-
-
+// Обработайт
 
 
 
