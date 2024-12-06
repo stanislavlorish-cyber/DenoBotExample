@@ -27,3 +27,8 @@ bot.callbackQuery("/about", async (ctx) => {
 
 
 
+
+
+
+
+
