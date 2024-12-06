@@ -1,28 +1,38 @@
+
 import { Bot, InlineKeyboard } from "https://deno.land/x/grammy@v1.32.0/mod.ts";
+import { serve } from "https://deno.land/std/http/server.ts";
 
-// export const bot = new Bot(Deno.env.get("BOT_TOKEN") || "");
-export const bot = new Bot("7371466627:AAGop9AjkCPT5s9YQPk4_MsCfEfX_sLEjSc")
+const bot = new Bot(Deno.env.get("BOT_TOKEN") || "");
+const port = Deno.env.get("PORT") || 8080; // Вы можете установить порт в переменных окружения
 
+// Хранилище пользователей и их интересов
 const users = new Map();
 
 // Клавиатура для команды /about
 const keyboard = new InlineKeyboard()
     .text("Обо мне", "/about");
 
+// Установка Webhook
+await bot.api.setWebhook(`https://https://stanislavlo-denobotexam-32-jmf3xkxg3kqn.deno.dev/:${port}/webhook`); // Замените YOUR_DOMAIN на ваш домен
+
+// Обработайте команду /start.
 bot.command("start", (ctx) => {
     ctx.reply("Добро пожаловать. Запущен и работает!", { reply_markup: keyboard });
     ctx.reply("Пожалуйста, напишите свои интересы и город.");
 });
 
+// Обработайте сообщения с интересами и городом.
 bot.on("message", async (ctx) => {
     const userId = ctx.from.id;
 
+    // Сохраняем интересы и город пользователя
     let userData = users.get(userId);
     if (!userData) {
         userData = { interests: '', city: '' };
         users.set(userId, userData);
     }
 
+    // Если интересы еще не были введены
     if (!userData.interests) {
         userData.interests = ctx.message.text;
         await ctx.reply(`Вы написали интересы: ${userData.interests}. Теперь напишите свой город.`);
@@ -30,6 +40,7 @@ bot.on("message", async (ctx) => {
         userData.city = ctx.message.text;
         await ctx.reply(`Вы из города: ${userData.city}.`);
 
+        // Сравниваем с другими пользователями
         const matches = Array.from(users.entries())
             .filter(([id, data]) => id !== userId && data.city === userData.city && data.interests === userData.interests);
 
@@ -48,9 +59,13 @@ bot.callbackQuery("/about", async (ctx) => {
     await ctx.reply("Я бот? Я бот... Я Бот!");
 });
 
-// bot.start();
-  bot.start();
-console.log('Бот запущен!');
+// Запуск Webhook сервера
+serve(async (req) => {
+    // Обрабатываем запросы от Telegram
+    if (req.method === "POST") {
+        const body = await req.json();
+        await bot.handleUpdate(body);
+        return new Respo
 
 
 
