@@ -1,16 +1,19 @@
-import { serve } from "https://deno.land/std/http/server.ts";
+import { Bot, InlineKeyboard } from "https://deno.land/x/grammy@v1.32.0/mod.ts";
 
-const bot = new Bot(Deno.env.get("BOT_TOKEN") || "");
-const port = Number(Deno.env.get("PORT") || 8080); // Установка порта с значением по умолчанию
+// Интерфейс для хранения данных пользователя
+interface UserData {
+    interests: string;
+    city: string;
+}
+
+export const bot = new Bot(Deno.env.get("BOT_TOKEN") || "");
 
 // Хранилище пользователей и их интересов
-const users = new Map();
+const users = new Map<number, UserData>();
 
 // Клавиатура для команды /about
-const keyboard = new InlineKeyboard().text("Обо мне", "/about");
-
-// Установка Webhook
-await bot.api.setWebhook(`https://stanislavlo-denobotexam-32-jmf3xkxg3kqn.deno.dev:${port}/webhook`); // Замените YOUR_DOMAIN на ваш домен
+const keyboard = new InlineKeyboard()
+    .text("Обо мне", "/about");
 
 // Обработайте команду /start.
 bot.command("start", (ctx) => {
@@ -32,26 +35,29 @@ bot.on("message", async (ctx) => {
     // Если интересы еще не были введены
     if (!userData.interests) {
         userData.interests = ctx.message.text;
-        await ctx.reply(`Вы написали интересы: ${userData.interests}. Теперь напишите свой город.`);
+        await ctx.reply(Вы написали интересы: ${userData.interests}. Теперь напишите свой город.);
     } else if (!userData.city) {
         userData.city = ctx.message.text;
-        await ctx.reply(`Вы из города: ${userData.city}.`);
+        await ctx.reply(Вы из города: ${userData.city}.);
 
         // Сравниваем с другими пользователями
         const matches = Array.from(users.entries())
-            .filter(([id, data]) => id !== userId && data.city === userData.city && data.interests === userData.interests);
+            .filter(([id]) => id !== userId && users.get(id)?.city === userData.city && users.get(id)?.interests === userData.interests);
 
         if (matches.length > 0) {
-            const matchedUsernames = matches.map(([id]) => `Пользователь ${id}`).join(', ');
-            await ctx.reply(`У вас есть совпадения с: ${matchedUsernames}. Хотите встретиться?`);
+            const matchedUsernames = matches.map(([id]) => Пользователь ${id}).join(', ');
+            await ctx.reply(У вас есть совпадения с: ${matchedUsernames}. Хотите встретиться?);
         } else {
             await ctx.reply("Совпадений не найдено.");
         }
     }
 });
 
-// Обработайт
+// Обработайте команду /about
+bot.callbackQuery("/about", async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await ctx.reply("Я бот? Я бот... Я Бот!");
+});
 
-
-// >>>>>>> 73b691c000c5667a2876609550494257c1976086
+await bot.start();
 
