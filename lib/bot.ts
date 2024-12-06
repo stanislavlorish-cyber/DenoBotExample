@@ -1,5 +1,6 @@
 
 import { Bot, InlineKeyboard } from "https://deno.land/x/grammy@v1.32.0/mod.ts";
+export const bot = new Bot(Deno.env.get("BOT_TOKEN") || "");
 
 // Интерфейс для хранения данных пользователя
 interface UserData {
