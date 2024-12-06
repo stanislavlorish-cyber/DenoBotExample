@@ -1,3 +1,4 @@
+
 import { Bot, InlineKeyboard } from "https://deno.land/x/grammy@v1.32.0/mod.ts";
 
 // Интерфейс для хранения данных пользователя
@@ -12,8 +13,7 @@ export const bot = new Bot(Deno.env.get("BOT_TOKEN") || "");
 const users = new Map<number, UserData>();
 
 // Клавиатура для команды /about
-const keyboard = new InlineKeyboard()
-    .text("Обо мне", "/about");
+const keyboard = new InlineKeyboard().text("Обо мне", "/about");
 
 // Обработайте команду /start.
 bot.command("start", (ctx) => {
@@ -35,18 +35,18 @@ bot.on("message", async (ctx) => {
     // Если интересы еще не были введены
     if (!userData.interests) {
         userData.interests = ctx.message.text;
-        await ctx.reply(Вы написали интересы: ${userData.interests}. Теперь напишите свой город.);
+        await ctx.reply(`Вы написали интересы: ${userData.interests}. Теперь напишите свой город.`);
     } else if (!userData.city) {
         userData.city = ctx.message.text;
-        await ctx.reply(Вы из города: ${userData.city}.);
+        await ctx.reply(`Вы из города: ${userData.city}.`);
 
         // Сравниваем с другими пользователями
         const matches = Array.from(users.entries())
             .filter(([id]) => id !== userId && users.get(id)?.city === userData.city && users.get(id)?.interests === userData.interests);
 
         if (matches.length > 0) {
-            const matchedUsernames = matches.map(([id]) => Пользователь ${id}).join(', ');
-            await ctx.reply(У вас есть совпадения с: ${matchedUsernames}. Хотите встретиться?);
+            const matchedUsernames = matches.map(([id]) => `Пользователь ${id}`).join(', ');
+            await ctx.reply(`У вас есть совпадения с: ${matchedUsernames}. Хотите встретиться?`);
         } else {
             await ctx.reply("Совпадений не найдено.");
         }
@@ -60,4 +60,6 @@ bot.callbackQuery("/about", async (ctx) => {
 });
 
 await bot.start();
+
+
 
