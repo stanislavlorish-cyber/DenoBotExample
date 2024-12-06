@@ -1,6 +1,5 @@
 
 import { Bot, InlineKeyboard } from "https://deno.land/x/grammy@v1.32.0/mod.ts";
-export const bot = new Bot(Deno.env.get("BOT_TOKEN") || "");
 
 // Интерфейс для хранения данных пользователя
 interface UserData {
@@ -8,6 +7,7 @@ interface UserData {
     city: string;
 }
 
+// Создайте экземпляр бота
 export const bot = new Bot(Deno.env.get("BOT_TOKEN") || "");
 
 // Хранилище пользователей и их интересов
@@ -61,6 +61,5 @@ bot.callbackQuery("/about", async (ctx) => {
 });
 
 await bot.start();
-
 
 
